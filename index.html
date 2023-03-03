@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .status {
+        width: 100%;
+        height: 100%;
+    }
+
+    #list {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 40%;
+    }
+
+    #imagelist {
+        display: flex;
+        flex-direction: column;
+    }
+
+    img {
+        width: 100px;
+        height: 100px;
+        border-radius: 8px;
+        margin: 4px;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="status">
+            <span id="total">Link's</span>
+            <div id="list"></div>
+        </div>
+        <div id="imageList">
+
+        </div>
+    </div>
+</body>
+
+<script>
+
+    const totalLabel = document.getElementById('total');
+    const listLink = document.getElementById('list');
+    const listImage = document.getElementById('imageList');
+
+
+    const setting = {
+        key: 'ACCESS_KEY'
+    }
+    function searchImage(keyword) {
+        let API = `https://api.unsplash.com/search/photos?query=${keyword}&client_id=${setting.key}`
+        let totalImage = 9;
+        let currentImage = 0;
+        fetch(API).then(res => {
+            return res.json()
+        }).then(data => {
+            console.log(data)
+            console.log(data.results)
+            // totalLabel.innerText = `Total: ${data.total}`;
+            data.results.forEach(element => {
+                if (currentImage < totalImage) {
+                    currentImage += 1;
+                    const para = document.createElement('a');
+                    const node = document.createTextNode(element.links.html);
+                    para.appendChild(node);
+                    para.setAttribute('href', element.links.html)
+                    listLink.appendChild(para);
+
+                    const img = document.createElement('img');
+                    img.setAttribute('src', element.urls.regular);
+                    listImage.appendChild(img);
+                }
+            });
+        })
+    }
+    searchImage('sigma')
+</script>
+
+</html>
